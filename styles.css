@@ -1,0 +1,427 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header Styles */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #4a5568;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header p {
+    font-size: 1.1rem;
+    color: #718096;
+    font-weight: 400;
+}
+
+/* Game Container */
+.game-container {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    margin-bottom: 20px;
+    flex: 1;
+}
+
+/* Sudoku Grid Styles */
+.sudoku-grid {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+    gap: 2px;
+    background-color: #2d3748;
+    padding: 8px;
+    border-radius: 12px;
+    margin: 0 auto 30px;
+    max-width: 450px;
+    aspect-ratio: 1;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.sudoku-cell {
+    background-color: #f7fafc;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.sudoku-cell:hover {
+    background-color: #e2e8f0;
+    transform: scale(1.05);
+}
+
+.sudoku-cell:focus {
+    outline: none;
+    background-color: #bee3f8;
+    border-color: #3182ce;
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+}
+
+/* Pre-filled cells styling */
+.sudoku-cell.prefilled {
+    background-color: #edf2f7;
+    color: #2b6cb0;
+    font-weight: 700;
+    cursor: default;
+}
+
+.sudoku-cell.prefilled:hover {
+    background-color: #edf2f7;
+    transform: none;
+}
+
+/* Solution cells styling */
+.sudoku-cell.solution {
+    background-color: #c6f6d5;
+    color: #22543d;
+    animation: fadeInSolution 0.5s ease forwards;
+}
+
+@keyframes fadeInSolution {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* 3x3 Box borders for better visualization */
+.sudoku-cell:nth-child(3n):not(:nth-child(9n)) {
+    border-right: 3px solid #4a5568;
+}
+
+.sudoku-cell:nth-child(n+19):nth-child(-n+27),
+.sudoku-cell:nth-child(n+46):nth-child(-n+54) {
+    border-bottom: 3px solid #4a5568;
+}
+
+/* Input styling */
+.sudoku-cell input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+    text-align: center;
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+    outline: none;
+}
+
+.sudoku-cell input::placeholder {
+    color: #a0aec0;
+    opacity: 0.7;
+}
+
+/* Controls Section */
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    min-width: 140px;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #4299e1, #3182ce);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #3182ce, #2c5282);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #ed8936, #dd6b20);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #dd6b20, #c05621);
+}
+
+.btn-example {
+    background: linear-gradient(135deg, #38a169, #2f855a);
+    color: white;
+}
+
+.btn-example:hover {
+    background: linear-gradient(135deg, #2f855a, #276749);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn:disabled:hover {
+    transform: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-icon {
+    font-size: 1.2rem;
+}
+
+/* Status Messages */
+.status-container {
+    margin-bottom: 25px;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-message {
+    padding: 15px 25px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-align: center;
+    animation: fadeIn 0.5s ease;
+    max-width: 100%;
+}
+
+.status-message.success {
+    background-color: #c6f6d5;
+    color: #22543d;
+    border: 2px solid #68d391;
+}
+
+.status-message.error {
+    background-color: #fed7d7;
+    color: #c53030;
+    border: 2px solid #f56565;
+}
+
+.status-message.info {
+    background-color: #bee3f8;
+    color: #2c5282;
+    border: 2px solid #63b3ed;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #4a5568;
+    font-weight: 600;
+}
+
+.spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #e2e8f0;
+    border-top: 3px solid #3182ce;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Info Sections */
+.info-section,
+.algorithm-info {
+    margin-bottom: 25px;
+    padding: 20px;
+    background: rgba(247, 250, 252, 0.8);
+    border-radius: 12px;
+    border-left: 5px solid #3182ce;
+}
+
+.info-section h3,
+.algorithm-info h3 {
+    color: #2d3748;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.info-section ul,
+.algorithm-info ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.info-section li,
+.algorithm-info li {
+    margin-bottom: 8px;
+    padding-left: 0;
+}
+
+.algorithm-info p {
+    margin-bottom: 15px;
+    color: #4a5568;
+    line-height: 1.6;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    margin-top: auto;
+    color: #718096;
+    font-size: 0.9rem;
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    header {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .game-container {
+        padding: 20px;
+    }
+
+    .sudoku-grid {
+        max-width: 350px;
+        gap: 1px;
+        padding: 6px;
+    }
+
+    .sudoku-cell {
+        font-size: 1.2rem;
+    }
+
+    .controls {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn {
+        width: 100%;
+        max-width: 250px;
+    }
+
+    .info-section,
+    .algorithm-info {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.8rem;
+    }
+
+    header p {
+        font-size: 1rem;
+    }
+
+    .sudoku-grid {
+        max-width: 280px;
+    }
+
+    .sudoku-cell {
+        font-size: 1rem;
+        border-radius: 4px;
+    }
+
+    .game-container {
+        padding: 15px;
+    }
+}
