@@ -1,69 +1,65 @@
-# 🧩 Sudoku Solver Web Application
+# Sudoku Game
 
- An interactive web-based Sudoku solver that uses the backtracking algorithm to find solutions to Sudoku puzzles.
-## 🚀 Features
+A simple and interactive Sudoku game built with HTML, CSS, and JavaScript.
 
-    Interactive 9x9 Grid: Click on any cell to enter numbers 1-9
+## Features
 
-    Backtracking Algorithm: Efficiently solves puzzles using recursive backtracking
+- Play Sudoku: Generate random puzzles and solve them
+- Live Timer: Track your solving time
+- Solution Checker: Verify your answers
+- Auto Solver: Let the computer solve the puzzle
+- Clear Grid: Start fresh anytime
+- Responsive Design: Works on desktop and mobile devices
 
-    Input Validation: Prevents invalid entries and detects puzzle conflicts
+## How to Play
 
-    Visual Feedback: Animated solving process with color-coded cells
+1. Start a New Game: Click "New Game" to generate a random Sudoku puzzle
+2. Fill in Numbers: Click on any empty cell and enter numbers 1-9
+3. Check Your Solution: Click "Check" to verify if your solution is correct
+4. Get Help: Use "Solve" to see the complete solution
+5. Clear: Use "Clear" to reset the entire board
 
-    Keyboard Navigation: Use arrow keys to navigate between cells
+## Game Rules
 
-    Error Handling: Displays appropriate messages for unsolvable puzzles
+- Each row must contain all numbers from 1 to 9 without repetition
+- Each column must contain all numbers from 1 to 9 without repetition
+- Each 3x3 box must contain all numbers from 1 to 9 without repetition
+- Gray numbers are pre-filled and cannot be changed
+- Green numbers are solutions provided by the solver
 
-    Example Puzzles: Load sample puzzles to test the solver
+## Files
 
-    Responsive Design: Works seamlessly on desktop and mobile devices
+- `index.html` - Main HTML structure
+- `styles.css` - Styling and layout
+- `script.js` - Game logic and functionality
 
-## 🛠️ Technologies Used
+## How to Run
 
-    HTML5: Structure and semantic markup
+1. Download all three files
+2. Open `index.html` in a web browser
+3. Start playing!
 
-    CSS3: Modern styling with Flexbox/Grid and animations
+## Controls
 
-    JavaScript (ES6+): Core logic and DOM manipulation
+- New Game: Generates a new random puzzle
+- Check: Validates your current solution
+- Solve: Shows the complete solution
+- Clear: Resets the board to empty
 
-    Google Fonts: Typography enhancement
+## Technical Details
 
-## 📁 File Structure
+- Built with vanilla JavaScript
+- Uses recursive backtracking algorithm for solving
+- Responsive CSS grid layout
+- Timer functionality tracks solving time
+- Input validation ensures only numbers 1-9 are accepted
 
-text
-sudoku-solver/
-├── index.html          # Main HTML structure
-├── styles.css          # Complete styling and responsive design
-├── script.js           # Sudoku solver logic and UI interactions
-└── README.md           # Project documentation
+## Browser Compatibility
 
-## 🎯 How to Use
+Works on all modern browsers including:
+- Chrome
+- Firefox
+- Safari
+- Edge
 
-    Enter Numbers: Click on empty cells and enter numbers 1-9
-
-    Solve Puzzle: Click the "Solve Sudoku" button to find the solution
-
-    Clear Grid: Use "Clear Grid" to start over
-
-    Load Example: Try "Load Example" for a sample puzzle
-
-    Keyboard Navigation: Use arrow keys to move between cells
-
-## 🧠 Algorithm Details
-
-The solver implements the backtracking algorithm with the following approach:
-
-    Find Empty Cell: Locate the next empty cell in the grid
-
-    Try Numbers: Attempt numbers 1-9 in the empty cell
-
-    Validate: Check if the number follows Sudoku rules:
-
-        No repetition in the same row
-
-        No repetition in the same column
-
-        No repetition in the same 3×3 box
-
-    
+Enjoy playing Sudoku!
