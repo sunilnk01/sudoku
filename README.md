@@ -35,9 +35,8 @@ A simple and interactive Sudoku game built with HTML, CSS, and JavaScript.
 
 ## How to Run
 
-1. Download all three files
-2. Open `index.html` in a web browser
-3. Start playing!
+Simply click the link below to start playing:
+https://sunilnk01.github.io/sudoku/
 
 ## Controls
 
