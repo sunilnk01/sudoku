@@ -1,167 +1,108 @@
-
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 body {
-  font-family: 'Roboto', sans-serif;
-  background: #f9fafb;
-  color: #222;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
+  font-family: Arial, sans-serif;
+  background: #f0f0f0;
   padding: 20px;
 }
 
-.container {
-  max-width: 720px;
-  width: 100%;
+.game-container {
+  max-width: 500px;
+  margin: 0 auto;
   text-align: center;
 }
 
-/* Header */
-header { margin-bottom: 16px; }
-header h1 { font-size: 1.9rem; color: #2d3748; margin-bottom: 4px; }
-header p { color: #718096; font-size: 0.95rem; }
-
-/* Sudoku Grid container */
-.sudoku-grid {
-  display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  gap: 0;                 /* keep cells flush so borders align */
-  width: min(90vw, 450px);
-  margin: 18px auto;
-  aspect-ratio: 1 / 1;
-  background: #2d3748;    /* outer frame color shows between cells */
-  border-radius: 10px;
-  padding: 3px;           /* small padding so outer frame shows */
-  box-shadow: 0 6px 20px rgba(16,24,40,0.06);
+h1 {
+  color: #333;
+  margin-bottom: 20px;
 }
 
-/* Each cell */
-.sudoku-cell {
-  background: #fff;
+.timer {
+  font-size: 18px;
+  font-weight: bold;
+  color: #0066cc;
+  margin: 10px 0;
+  display: none;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 1px;
+  background: #333;
+  border: 3px solid #333;
+  margin: 20px auto;
+  width: 450px;
+  height: 450px;
+}
+
+.cell {
+  background: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #cbd5e0; /* thin cell border */
-  user-select: none;
-  position: relative;
-  overflow: hidden;
 }
 
-/* Input inside each cell */
-.sudoku-cell input {
+.cell input {
   width: 100%;
   height: 100%;
   border: none;
   text-align: center;
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: #2d3748;
-  background: transparent;
+  font-size: 20px;
+  font-weight: bold;
   outline: none;
-  caret-color: #3182ce;
 }
 
-/* Prefilled numbers (puzzle givens) */
-.sudoku-cell.prefilled input {
-  color: #2b6cb0;
+.cell.fixed input {
+  color: #0066cc;
+  background: #f8f8f8;
 }
 
-/* Solver-filled numbers */
-.sudoku-cell.solution input {
-  color: #22543d;
-  background: #c6f6d5;
-  animation: fadeIn 0.18s ease-in-out;
+.cell.solved input {
+  color: #009900;
+  background: #e8ffe8;
 }
 
-/* =========================
-   Correct 3x3 box borders
-   - Vertical separators after columns 3 & 6 (and rightmost)
-   - Horizontal separators after rows 3 & 6 (and outer top/bottom)
-   ========================= */
-
-/* Vertical: make right border thicker for columns 3 and 6 and 9 (every 3rd column) */
-.sudoku-cell:nth-child(9n+3),
-.sudoku-cell:nth-child(9n+6),
-.sudoku-cell:nth-child(9n) {
-  border-right: 3px solid #2d3748;
+/* Thick borders for 3x3 boxes */
+.cell:nth-child(3n) {
+  border-right: 2px solid #333;
 }
 
-/* Vertical: make left border thicker for columns 1,4,7 (optional — keeps box edges crisp) */
-.sudoku-cell:nth-child(9n+1),
-.sudoku-cell:nth-child(9n+4),
-.sudoku-cell:nth-child(9n+7) {
-  border-left: 3px solid #2d3748;
+.cell:nth-child(9n) {
+  border-right: 2px solid #333;
 }
 
-/* Horizontal: add a thick bottom border to rows 3 and 6 (indices 19..27 and 46..54) */
-.sudoku-cell:nth-child(n+19):nth-child(-n+27),
-.sudoku-cell:nth-child(n+46):nth-child(-n+54) {
-  border-bottom: 3px solid #2d3748;
+.cell:nth-child(n+19):nth-child(-n+27),
+.cell:nth-child(n+46):nth-child(-n+54) {
+  border-bottom: 2px solid #333;
 }
 
-/* Outer horizontal edges: top for first row (1..9) and bottom for last row (73..81) */
-.sudoku-cell:nth-child(-n+9) {
-  border-top: 3px solid #2d3748;
-}
-.sudoku-cell:nth-child(n+73):nth-child(-n+81) {
-  border-bottom: 3px solid #2d3748;
+.buttons {
+  margin: 20px 0;
 }
 
-/* =========================
-   Controls & misc styling
-   ========================= */
-
-.controls {
-  margin: 14px 0;
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.btn {
-  padding: 10px 14px;
-  border-radius: 8px;
+button {
+  padding: 10px 15px;
+  margin: 0 5px;
   border: none;
-  font-weight: 700;
+  border-radius: 5px;
+  background: #0066cc;
+  color: white;
+  font-weight: bold;
   cursor: pointer;
-  transition: transform .12s ease, box-shadow .12s ease;
 }
 
-.btn:active { transform: translateY(1px); }
-
-.btn.primary { background: #3182ce; color: #fff; }
-.btn.secondary { background: #38a169; color: #fff; }
-.btn.success { background: #805ad5; color: #fff; }
-.btn.danger { background: #e53e3e; color: #fff; }
-
-.select {
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid #cbd5e0;
-  background: #fff;
-  font-weight: 700;
+button:hover {
+  background: #0055aa;
 }
 
-/* Status message */
-#statusMessage {
-  margin-top: 10px;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-weight: 700;
-}
-.hidden { display: none !important; }
-
-/* small animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(.96); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-/* Responsive adjustments */
-@media (max-width: 640px) {
-  .sudoku-cell input { font-size: 1.05rem; }
-  .controls { gap: 8px; }
+.message {
+  margin: 10px 0;
+  padding: 10px;
+  font-weight: bold;
+  min-height: 40px;
 }
