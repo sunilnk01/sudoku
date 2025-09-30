@@ -1,188 +1,216 @@
-class Sudoku {
-  constructor() {
-    this.grid = Array(9).fill().map(() => Array(9).fill(0));
-    this.originalGrid = Array(9).fill().map(() => Array(9).fill(0));
-    this.initializeGrid();
-    this.setupButtons();
-  }
+let board = Array(9).fill().map(() => Array(9).fill(0));
+let startBoard = Array(9).fill().map(() => Array(9).fill(0));
+let time = 0;
+let timerId = null;
+let gameStarted = false;
 
-  initializeGrid() {
-    const container = document.getElementById("sudokuGrid");
-    container.innerHTML = "";
-    for (let i = 0; i < 81; i++) {
-      const cell = document.createElement("div");
-      cell.className = "sudoku-cell";
-      const input = document.createElement("input");
-      input.type = "text";
-      input.maxLength = 1;
-      input.addEventListener("input", (e) => this.handleInput(e, i));
-      cell.appendChild(input);
-      container.appendChild(cell);
-    }
-  }
-
-  setupButtons() {
-    document.getElementById("newPuzzleBtn").addEventListener("click", () => this.generatePuzzle());
-    document.getElementById("checkBtn").addEventListener("click", () => this.checkSolution());
-    document.getElementById("solveBtn").addEventListener("click", () => this.solvePuzzle());
-    document.getElementById("clearBtn").addEventListener("click", () => this.clearGrid());
-  }
-
-  handleInput(e, index) {
-    const value = e.target.value;
-    if (value && !/^[1-9]$/.test(value)) {
-      e.target.value = "";
-      return;
-    }
-    const r = Math.floor(index / 9), c = index % 9;
-    this.grid[r][c] = value ? parseInt(value) : 0;
-  }
-
-  clearGrid() {
-    this.grid = Array(9).fill().map(() => Array(9).fill(0));
-    this.originalGrid = Array(9).fill().map(() => Array(9).fill(0));
-    document.querySelectorAll(".sudoku-cell input").forEach(el => {
-      el.value = "";
-      el.parentElement.classList.remove("prefilled", "solution");
+function createGrid() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  
+  for (let i = 0; i < 81; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.maxLength = 1;
+    
+    input.addEventListener('input', function(e) {
+      const val = e.target.value;
+      if (val && !'123456789'.includes(val)) {
+        e.target.value = '';
+        return;
+      }
+      
+      const row = Math.floor(i / 9);
+      const col = i % 9;
+      board[row][col] = val ? Number(val) : 0;
+      
+      if (!gameStarted && val) {
+        startTimer();
+      }
     });
-    this.showMessage("🧹 Grid cleared");
-  }
-
-  /* --- Type-1: Generate Puzzle --- */
-  generatePuzzle() {
-    this.clearGrid();
-    this.solveRecursive(this.grid); // generate full solved grid
-    const puzzle = this.grid.map(row => [...row]);
-
-    // Remove random cells for puzzle difficulty
-    let removed = 40; // difficulty (higher = harder)
-    while (removed > 0) {
-      const r = Math.floor(Math.random() * 9);
-      const c = Math.floor(Math.random() * 9);
-      if (puzzle[r][c] !== 0) {
-        puzzle[r][c] = 0;
-        removed--;
-      }
-    }
-
-    // Load into grid
-    const inputs = document.querySelectorAll(".sudoku-cell input");
-    for (let r = 0; r < 9; r++) {
-      for (let c = 0; c < 9; c++) {
-        const idx = r * 9 + c;
-        this.grid[r][c] = puzzle[r][c];
-        this.originalGrid[r][c] = puzzle[r][c];
-        if (puzzle[r][c] !== 0) {
-          inputs[idx].value = puzzle[r][c];
-          inputs[idx].parentElement.classList.add("prefilled");
-        } else {
-          inputs[idx].value = "";
-          inputs[idx].parentElement.classList.remove("prefilled");
-        }
-      }
-    }
-    this.showMessage("🎲 New puzzle generated!");
-  }
-
-  /* --- Type-2: Solve User Puzzle --- */
-  solvePuzzle() {
-    const copy = this.grid.map(r => [...r]);
-    if (!this.isValidGrid(copy)) {
-      this.showMessage("❌ Invalid puzzle input");
-      return;
-    }
-    if (this.solveRecursive(copy)) {
-      this.grid = copy;
-      this.updateUI(true);
-      this.showMessage("⚡ Puzzle solved!");
-    } else {
-      this.showMessage("❌ No solution found");
-    }
-  }
-
-  /* Check if user solution is correct */
-  checkSolution() {
-    const copy = this.grid.map(r => [...r]);
-    if (this.isValidGrid(copy) && !this.findEmpty(copy)) {
-      this.showMessage("✔️ Correct solution!");
-    } else {
-      this.showMessage("❌ Incorrect solution");
-    }
-  }
-
-  /* --- Sudoku Logic --- */
-  isValid(grid, row, col, num) {
-    for (let x = 0; x < 9; x++) {
-      if (grid[row][x] === num || grid[x][col] === num) return false;
-    }
-    const sr = row - (row % 3), sc = col - (col % 3);
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        if (grid[sr+i][sc+j] === num) return false;
-      }
-    }
-    return true;
-  }
-
-  findEmpty(grid) {
-    for (let r = 0; r < 9; r++) {
-      for (let c = 0; c < 9; c++) {
-        if (grid[r][c] === 0) return [r, c];
-      }
-    }
-    return null;
-  }
-
-  solveRecursive(grid) {
-    const empty = this.findEmpty(grid);
-    if (!empty) return true;
-    const [r, c] = empty;
-    const nums = [1,2,3,4,5,6,7,8,9].sort(() => Math.random()-0.5);
-    for (let n of nums) {
-      if (this.isValid(grid, r, c, n)) {
-        grid[r][c] = n;
-        if (this.solveRecursive(grid)) return true;
-        grid[r][c] = 0;
-      }
-    }
-    return false;
-  }
-
-  isValidGrid(grid) {
-    for (let r = 0; r < 9; r++) {
-      for (let c = 0; c < 9; c++) {
-        if (grid[r][c] !== 0) {
-          const num = grid[r][c];
-          grid[r][c] = 0;
-          if (!this.isValid(grid, r, c, num)) {
-            grid[r][c] = num;
-            return false;
-          }
-          grid[r][c] = num;
-        }
-      }
-    }
-    return true;
-  }
-
-  updateUI(showSolutions=false) {
-    const inputs = document.querySelectorAll(".sudoku-cell input");
-    for (let r = 0; r < 9; r++) {
-      for (let c = 0; c < 9; c++) {
-        const idx = r*9+c;
-        inputs[idx].value = this.grid[r][c] || "";
-        if (showSolutions && this.originalGrid[r][c] === 0 && this.grid[r][c] !== 0) {
-          inputs[idx].parentElement.classList.add("solution");
-        }
-      }
-    }
-  }
-
-  showMessage(msg) {
-    const el = document.getElementById("statusMessage");
-    el.textContent = msg;
-    el.classList.remove("hidden");
+    
+    cell.appendChild(input);
+    grid.appendChild(cell);
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => new Sudoku());
+function startTimer() {
+  gameStarted = true;
+  time = 0;
+  document.getElementById('timer').style.display = 'block';
+  
+  timerId = setInterval(() => {
+    time++;
+    const min = String(Math.floor(time / 60)).padStart(2, '0');
+    const sec = String(time % 60).padStart(2, '0');
+    document.getElementById('timer').textContent = `Time: ${min}:${sec}`;
+  }, 1000);
+}
+
+function stopTimer() {
+  gameStarted = false;
+  clearInterval(timerId);
+}
+
+function newGame() {
+  stopTimer();
+  document.getElementById('timer').style.display = 'none';
+  document.getElementById('message').textContent = '';
+  
+  // Create solved board
+  solveSudoku(board);
+  
+  // Remove some numbers
+  const tempBoard = board.map(row => [...row]);
+  let toRemove = 40;
+  
+  while (toRemove > 0) {
+    const r = Math.floor(Math.random() * 9);
+    const c = Math.floor(Math.random() * 9);
+    if (tempBoard[r][c] !== 0) {
+      tempBoard[r][c] = 0;
+      toRemove--;
+    }
+  }
+  
+  // Update display
+  const inputs = document.querySelectorAll('.cell input');
+  for (let i = 0; i < 81; i++) {
+    const row = Math.floor(i / 9);
+    const col = i % 9;
+    const val = tempBoard[row][col];
+    
+    inputs[i].value = val || '';
+    inputs[i].parentElement.className = 'cell';
+    if (val !== 0) {
+      inputs[i].parentElement.classList.add('fixed');
+    }
+    
+    board[row][col] = val;
+    startBoard[row][col] = val;
+  }
+  
+  showMessage('New game started!');
+}
+
+function checkAnswer() {
+  if (isBoardValid(board)) {
+    showMessage('Correct! Well done!');
+    stopTimer();
+  } else {
+    showMessage('Some numbers are wrong. Keep trying!');
+  }
+}
+
+function solveGame() {
+  stopTimer();
+  document.getElementById('timer').style.display = 'none';
+  
+  const solved = solveSudoku(board);
+  if (solved) {
+    updateDisplay();
+    showMessage('Puzzle solved!');
+  } else {
+    showMessage('Cannot solve this puzzle');
+  }
+}
+
+function clearAll() {
+  stopTimer();
+  document.getElementById('timer').style.display = 'none';
+  
+  board = Array(9).fill().map(() => Array(9).fill(0));
+  startBoard = Array(9).fill().map(() => Array(9).fill(0));
+  
+  const inputs = document.querySelectorAll('.cell input');
+  inputs.forEach(input => {
+    input.value = '';
+    input.parentElement.className = 'cell';
+  });
+  
+  showMessage('Board cleared');
+}
+
+function updateDisplay() {
+  const inputs = document.querySelectorAll('.cell input');
+  for (let i = 0; i < 81; i++) {
+    const row = Math.floor(i / 9);
+    const col = i % 9;
+    inputs[i].value = board[row][col] || '';
+    
+    if (startBoard[row][col] === 0 && board[row][col] !== 0) {
+      inputs[i].parentElement.classList.add('solved');
+    }
+  }
+}
+
+function showMessage(text) {
+  document.getElementById('message').textContent = text;
+}
+
+// Sudoku solving functions
+function solveSudoku(grid) {
+  for (let row = 0; row < 9; row++) {
+    for (let col = 0; col < 9; col++) {
+      if (grid[row][col] === 0) {
+        for (let num = 1; num <= 9; num++) {
+          if (canPlace(grid, row, col, num)) {
+            grid[row][col] = num;
+            if (solveSudoku(grid)) return true;
+            grid[row][col] = 0;
+          }
+        }
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+function canPlace(grid, row, col, num) {
+  // Check row
+  for (let x = 0; x < 9; x++) {
+    if (grid[row][x] === num) return false;
+  }
+  
+  // Check column
+  for (let x = 0; x < 9; x++) {
+    if (grid[x][col] === num) return false;
+  }
+  
+  // Check 3x3 box
+  const boxRow = Math.floor(row / 3) * 3;
+  const boxCol = Math.floor(col / 3) * 3;
+  
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      if (grid[boxRow + i][boxCol + j] === num) return false;
+    }
+  }
+  
+  return true;
+}
+
+function isBoardValid(grid) {
+  for (let row = 0; row < 9; row++) {
+    for (let col = 0; col < 9; col++) {
+      if (grid[row][col] === 0) return false;
+      
+      const num = grid[row][col];
+      grid[row][col] = 0;
+      
+      if (!canPlace(grid, row, col, num)) {
+        grid[row][col] = num;
+        return false;
+      }
+      
+      grid[row][col] = num;
+    }
+  }
+  return true;
+}
+
+// Initialize game
+createGrid();
