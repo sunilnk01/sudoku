@@ -1,33 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🧩 Sudoku Game & Solver</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>Sudoku Game</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="container">
-    <header>
-      <h1>🧩 Sudoku Game & Solver</h1>
-      <p>Choose a mode: play a random puzzle or solve your own input</p>
-    </header>
-
-    <section id="sudokuGrid" class="sudoku-grid"></section>
-
-    <div class="controls">
-      <button id="newPuzzleBtn" class="btn primary">🎲 New Puzzle</button>
-      <button id="checkBtn" class="btn secondary">✔️ Check Solution</button>
-      <button id="solveBtn" class="btn success">⚡ Solve Puzzle</button>
-      <button id="clearBtn" class="btn danger">🧹 Clear Grid</button>
+  <div class="game-container">
+    <h1>Sudoku Game</h1>
+    
+    <div class="timer" id="timer">Time: 00:00</div>
+    
+    <div class="grid" id="grid"></div>
+    
+    <div class="buttons">
+      <button onclick="newGame()">New Game</button>
+      <button onclick="checkAnswer()">Check</button>
+      <button onclick="solveGame()">Solve</button>
+      <button onclick="clearAll()">Clear</button>
     </div>
-
-    <div id="statusMessage" class="status hidden"></div>
-
-    <footer>
-      <p>© 2025 Sudoku Project — Built with HTML, CSS & JS</p>
-    </footer>
-  </main>
+    
+    <div class="message" id="message"></div>
+  </div>
 
   <script src="script.js"></script>
 </body>
